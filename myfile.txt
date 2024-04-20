@@ -1,0 +1,62 @@
+
+cisco has implemented voice vlan and how voice vlan will work together with the data vlan when you need to connect youur computer using an ip phone to the cisco switch.
+
+cisco bent their rule between accesport versue trunk port when it comes to voice vlan.
+
+if you put a statement such as: 
+"switchport access voice vlan" on a port that port can carry two vlan which is your data vlan and the voice vlan but they claim that port still an access port that is not a trunk port.
+
+
+
+-------------------------------------------------------
+!Router 2811
+
+ip dhcp pool data
+network 192.168.1.0 255.255.255.0
+default-router 192.168.1.1
+ex
+
+ip dhcp pool voice
+network 192.168.2.0 255.255.255.0
+default-router 192.168.2.1
+option 150 ip 192.168.2.1
+ex
+
+
+
+telephony-service
+max-ephones 2
+max-dn 2
+ip source-address 192.168.2.1 port 2000
+auto assign 1 to 2
+ex
+
+ephone-dn 1
+num 1010
+ex
+
+ephone-dn 2
+num 2020
+ex
+
+-----------------------------
+use layer 3 swwitch as it supports PoE
+
+en
+conf t
+
+vlan 10
+name data
+vlan 20
+name voice
+ex
+
+int f0/1
+switchport mode trunk
+ex
+
+int range f0/2-3
+switchport mode access
+switchport access vlan 10
+swwitchport voice vlan 20
+ex
